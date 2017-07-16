@@ -31,7 +31,7 @@ large_text_size = 48
 medium_text_size = 28
 small_text_size = 18
 ThisDate = dt.datetime.now().replace(microsecond=0).isoformat()
-TempThreshold = 10
+TempThreshold = 1
 
 
 @contextmanager
