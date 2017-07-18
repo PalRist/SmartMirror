@@ -1,6 +1,5 @@
-# smartmirror.py
-# requirements
-# requests, feedparser, traceback, Pillow
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from Tkinter import *
 import locale
@@ -17,7 +16,9 @@ from contextlib import contextmanager
 
 LOCALE_LOCK = threading.Lock()
 
-ui_locale = 'nb_NO.UTF-8' # e.g. 'fr_FR' fro French, '' as default
+ui_locale_linux = 'nb_NO.UTF-8'
+ui_locale_macOS = 'nb_NO'
+ui_locale = ui_locale_macOS
 time_format = 24 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
 news_country_code = 'no_no'
@@ -48,19 +49,19 @@ def setlocale(name): #thread proof function to work with locale
 # maps open weather icons to
 # icon reading is not impacted by the 'lang' parameter
 icon_lookup = {
-    'clear-day': "assets/Sun.png",  # clear sky day
-    'wind': "assets/Wind.png",   #wind
-    'cloudy': "assets/Cloud.png",  # cloudy day
-    'partly-cloudy-day': "assets/PartlySunny.png",  # partly cloudy day
-    'rain': "assets/Rain.png",  # rain day
-    'snow': "assets/Snow.png",  # snow day
-    'snow-thin': "assets/Snow.png",  # sleet day
-    'fog': "assets/Haze.png",  # fog day
-    'clear-night': "assets/Moon.png",  # clear sky night
-    'partly-cloudy-night': "assets/PartlyMoon.png",  # scattered clouds night
-    'thunderstorm': "assets/Storm.png",  # thunderstorm
-    'tornado': "assests/Tornado.png",    # tornado
-    'hail': "assests/Hail.png"  # hail
+    'clear-day': "imgs/weather_icons/Sun.png",  # clear sky day
+    'wind': "imgs/weather_icons/Wind.png",   #wind
+    'cloudy': "imgs/weather_icons/Cloud.png",  # cloudy day
+    'partly-cloudy-day': "imgs/weather_icons/PartlySunny.png",  # partly cloudy day
+    'rain': "imgs/weather_icons/Rain.png",  # rain day
+    'snow': "imgs/weather_icons/Snow.png",  # snow day
+    'snow-thin': "imgs/weather_icons/Snow.png",  # sleet day
+    'fog': "imgs/weather_icons/Haze.png",  # fog day
+    'clear-night': "imgs/weather_icons/Moon.png",  # clear sky night
+    'partly-cloudy-night': "imgs/weather_icons/PartlyMoon.png",  # scattered clouds night
+    'thunderstorm': "imgs/weather_icons/Storm.png",  # thunderstorm
+    'tornado': "imgs/weather_icons/Tornado.png",    # tornado
+    'hail': "imgs/weather_icons/Hail.png"  # hail
 }
 
 class TravelMap(Frame):
