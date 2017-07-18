@@ -4,14 +4,16 @@
 from Tkinter import *
 import locale
 import threading
+import os
+import platform
 import time
 import requests
 import json
 import traceback
 import feedparser
 import datetime as dt
-import os
-import platform
+from modules.TravelMap import *
+
 from PIL import Image, ImageTk
 from contextlib import contextmanager
 
@@ -19,10 +21,12 @@ LOCALE_LOCK = threading.Lock()
 
 ui_locale_linux = 'nb_NO.UTF8'
 ui_locale_macOS = 'nb_NO'
-if (platform.system()).lower() == 'darmin':
+if (platform.system()).lower() == 'darwin': # Check to see if MAC OS - Darwin
     ui_locale = ui_locale_macOS
 else:
     ui_locale = ui_locale_linux
+
+
 time_format = 24 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
 news_country_code = 'no_no'
@@ -65,72 +69,6 @@ icon_lookup = {
     'tornado': os.path.join("imgs", "weather_icons", "Tornado.png"),    # tornado
     'hail': os.path.join("imgs", "weather_icons", "Hail.png")  # hail
 }
-
-class TravelMap(Frame):
-    def __init__(self, parent, *args, **kwargs):
-        Frame.__init__(self, parent, bg='black')
-        self.image = Image.open(os.path.join(os.path.join("imgs", "Vestlandskart","ActiveRoad.png")))
-        self.image = self.image.convert('RGB')
-        self.photo = ImageTk.PhotoImage(self.image)
-        self.label = Label(image=self.photo, borderwidth=0, state='normal')
-        self.label.image = self.photo 
-        self.label.pack(side=LEFT, anchor=E, padx=100)
-        self.doUpdate()
-
-    def doUpdate(self):
-        self.MinTempForde = float(self.minWeatherAtLocation(61.4518,5.82))
-        self.MinTempSande = float(self.minWeatherAtLocation(61.3251,5.7977))
-        self.MinTempVadheim = float(self.minWeatherAtLocation(61.2088,5.8235))
-        self.MinTempHoyanger = float(self.minWeatherAtLocation(61.2176,6.0638))
-        self.makeRoad(self.MinTempForde, self.MinTempSande, self.MinTempVadheim, self.MinTempHoyanger)
-        self.after(60000, self.doUpdate)
-
-    def minWeatherAtLocation(self, latitude, longitude):
-        weather_req_url = "https://api.darksky.net/forecast/%s/%s,%s,%s?exclude=currently,flags&lang=%s&units=%s" % (weather_api_token, latitude, longitude, ThisDate, weather_lang, weather_unit)
-
-        r = requests.get( weather_req_url )
-        weather_obj = json.loads(r.text)
-        ThisHour = dt.datetime.now().hour
-        # degree_sign = u'\N{DEGREE SIGN}'
-        self.ColdestTemp = 50
-        self.ColdestHour = 25
-
-        for hour in range(24):
-            if hour <= ThisHour:
-                self.temperature = float(weather_obj['hourly']['data'][hour]['temperature'])
-                if self.temperature <= self.ColdestTemp:
-                    self.ColdestTemp = self.temperature
-                    self.ColdestHour = hour
-
-        # temperatureMin = "%s%s" % (str(ColdestTemp), degree_sign)
-        return self.ColdestTemp#, self.ColdestHour
-        # print('Minstetemperatur i Forde %s i dag klokken %s.' % (MinTempForde[0], MinTempForde[1]))
-
-    def makeRoad(self, MinTempForde, MinTempSande, MinTempVadheim, MinTempHoyanger):
-        self.tempImg = Image.open(os.path.join("imgs","Vestlandskart", "road_trans.png"))
-        
-        # print(MinTempForde)
-
-        if MinTempForde <= TempThreshold:
-            self.imgForde = Image.open(os.path.join(("imgs","Vestlandskart","forde.png")))
-            self.tempImg.paste(self.imgForde, (0, 0), self.imgForde)
-            # self.tempImg.save('assets/ActiveRoad2.png')
-
-        if MinTempSande <= TempThreshold:
-            self.imgSande = Image.open(os.path.join("imgs","Vestlandskart", "sande.png"))
-            self.tempImg.paste(self.imgSande, (0, 0), self.imgSande)
-
-        if MinTempVadheim <= TempThreshold:
-            self.imgVadheim = Image.open(os.path.join("imgs","Vestlandskart", "vadheim.png"))
-            self.tempImg.paste(self.imgVadheim, (0, 0), self.imgVadheim)
-
-        if MinTempHoyanger <= TempThreshold:
-            self.imgHoyanger = Image.open(os.path.join("imgs","Vestlandskart", "hoyanger.png'"))
-            self.tempImg.paste(self.imgHoyanger, (0, 0), self.imgHoyanger)
-
-        self.tempImg = self.tempImg.resize((140, 231), Image.BICUBIC) #125, 216
-        self.tempImg.save(os.path.join("imgs","Vestlandskart", "ActiveRoad.png"))
-
 class Clock(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, bg='black')
@@ -318,7 +256,8 @@ class NewsHeadline(Frame):
     def __init__(self, parent, event_name=""):
         Frame.__init__(self, parent, bg='black')
 
-        image = Image.open(os.path.join("assets", "Newspaper.png"))
+
+        image = Image.open("imgs/weather_icons/Newspaper.png")
         image = image.resize((25, 25), Image.ANTIALIAS)
         image = image.convert('RGB')
         photo = ImageTk.PhotoImage(image)
