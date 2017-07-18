@@ -17,7 +17,7 @@ from contextlib import contextmanager
 LOCALE_LOCK = threading.Lock()
 
 ui_locale_linux = 'nb_NO.UTF-8'
-ui_locale_macOS = 'nb_NO'
+ui_locale_macOS = 'no_no'
 ui_locale = ui_locale_macOS
 time_format = 24 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
@@ -37,8 +37,6 @@ TempThreshold = 1
 
 @contextmanager
 def setlocale(name): #thread proof function to work with locale
-    print name
-    print locale.LC_ALL
     with LOCALE_LOCK:
         saved = locale.setlocale(locale.LC_ALL)
         try:
@@ -67,7 +65,7 @@ icon_lookup = {
 class TravelMap(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, bg='black')
-        self.image = Image.open('assets/ActiveRoad.png')
+        self.image = Image.open('imgs/Vestlandskart/ActiveRoad.png')
         self.image = self.image.convert('RGB')
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = Label(image=self.photo, borderwidth=0, state='normal')
@@ -105,29 +103,29 @@ class TravelMap(Frame):
         # print('Minstetemperatur i Forde %s i dag klokken %s.' % (MinTempForde[0], MinTempForde[1]))
 
     def makeRoad(self, MinTempForde, MinTempSande, MinTempVadheim, MinTempHoyanger):
-        self.tempImg = Image.open('assets/road_trans.png')
+        self.tempImg = Image.open('imgs/Vestlandskart/road_trans.png')
         
         # print(MinTempForde)
 
         if MinTempForde <= TempThreshold:
-            self.imgForde = Image.open('assets/forde.png')
+            self.imgForde = Image.open('imgs/Vestlandskart/forde.png')
             self.tempImg.paste(self.imgForde, (0, 0), self.imgForde)
-            # self.tempImg.save('assets/ActiveRoad2.png')
+            # self.tempImg.save('imgs/Vestlandskart/ActiveRoad2.png')
 
         if MinTempSande <= TempThreshold:
-            self.imgSande = Image.open('assets/sande.png')
+            self.imgSande = Image.open('imgs/Vestlandskart/sande.png')
             self.tempImg.paste(self.imgSande, (0, 0), self.imgSande)
 
         if MinTempVadheim <= TempThreshold:
-            self.imgVadheim = Image.open('assets/vadheim.png')
+            self.imgVadheim = Image.open('imgs/Vestlandskart/vadheim.png')
             self.tempImg.paste(self.imgVadheim, (0, 0), self.imgVadheim)
 
         if MinTempHoyanger <= TempThreshold:
-            self.imgHoyanger = Image.open('assets/hoyanger.png')
+            self.imgHoyanger = Image.open('imgs/Vestlandskart/hoyanger.png')
             self.tempImg.paste(self.imgHoyanger, (0, 0), self.imgHoyanger)
 
         self.tempImg = self.tempImg.resize((140, 231), Image.BICUBIC) #125, 216
-        self.tempImg.save('assets/ActiveRoad.png')
+        self.tempImg.save('imgs/Vestlandskart/ActiveRoad.png')
 
 class Clock(Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -316,7 +314,7 @@ class NewsHeadline(Frame):
     def __init__(self, parent, event_name=""):
         Frame.__init__(self, parent, bg='black')
 
-        image = Image.open("assets/Newspaper.png")
+        image = Image.open("imgs/weather_icons/Newspaper.png")
         image = image.resize((25, 25), Image.ANTIALIAS)
         image = image.convert('RGB')
         photo = ImageTk.PhotoImage(image)
