@@ -11,15 +11,18 @@ import traceback
 import feedparser
 import datetime as dt
 import os
-
+import platform
 from PIL import Image, ImageTk
 from contextlib import contextmanager
 
 LOCALE_LOCK = threading.Lock()
 
-ui_locale_linux = 'nb_NO.UTF-8'
+ui_locale_linux = 'nb_NO.UTF8'
 ui_locale_macOS = 'nb_NO'
-ui_locale = ui_locale_macOS
+if (platform.system()).lower() == 'darmin':
+    ui_locale = ui_locale_macOS
+else:
+    ui_locale = ui_locale_linux
 time_format = 24 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
 news_country_code = 'no_no'
@@ -38,8 +41,6 @@ TempThreshold = 1
 
 @contextmanager
 def setlocale(name): #thread proof function to work with locale
-    print name
-    print locale.LC_ALL
     with LOCALE_LOCK:
         saved = locale.setlocale(locale.LC_ALL)
         try:
@@ -68,7 +69,7 @@ icon_lookup = {
 class TravelMap(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, bg='black')
-        self.image = Image.open(os.path.join("assets", "ActiveRoad.png"))
+        self.image = Image.open(os.path.join(os.path.join("imgs", "Vestlandskart","ActiveRoad.png")))
         self.image = self.image.convert('RGB')
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = Label(image=self.photo, borderwidth=0, state='normal')
@@ -106,29 +107,29 @@ class TravelMap(Frame):
         # print('Minstetemperatur i Forde %s i dag klokken %s.' % (MinTempForde[0], MinTempForde[1]))
 
     def makeRoad(self, MinTempForde, MinTempSande, MinTempVadheim, MinTempHoyanger):
-        self.tempImg = Image.open(os.path.join("assets", "road_trans.png"))
+        self.tempImg = Image.open(os.path.join("imgs","Vestlandskart", "road_trans.png"))
         
         # print(MinTempForde)
 
         if MinTempForde <= TempThreshold:
-            self.imgForde = Image.open(os.path.join(("assets", "forde.png")))
+            self.imgForde = Image.open(os.path.join(("imgs","Vestlandskart","forde.png")))
             self.tempImg.paste(self.imgForde, (0, 0), self.imgForde)
             # self.tempImg.save('assets/ActiveRoad2.png')
 
         if MinTempSande <= TempThreshold:
-            self.imgSande = Image.open(os.path.join("assets", "sande.png"))
+            self.imgSande = Image.open(os.path.join("imgs","Vestlandskart", "sande.png"))
             self.tempImg.paste(self.imgSande, (0, 0), self.imgSande)
 
         if MinTempVadheim <= TempThreshold:
-            self.imgVadheim = Image.open(os.path.join("assets", "vadheim.png"))
+            self.imgVadheim = Image.open(os.path.join("imgs","Vestlandskart", "vadheim.png"))
             self.tempImg.paste(self.imgVadheim, (0, 0), self.imgVadheim)
 
         if MinTempHoyanger <= TempThreshold:
-            self.imgHoyanger = Image.open(os.path.join("assets", "hoyanger.png'"))
+            self.imgHoyanger = Image.open(os.path.join("imgs","Vestlandskart", "hoyanger.png'"))
             self.tempImg.paste(self.imgHoyanger, (0, 0), self.imgHoyanger)
 
         self.tempImg = self.tempImg.resize((140, 231), Image.BICUBIC) #125, 216
-        self.tempImg.save(os.path.join("assets", "ActiveRoad.png"))
+        self.tempImg.save(os.path.join("imgs","Vestlandskart", "ActiveRoad.png"))
 
 class Clock(Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -377,8 +378,7 @@ class SpotifyToggle(Frame):
 
         if self.label is not None:
             self.label.pack_forget()
-        print self.width, self.height
-        self.image = Image.open(os.path.join("imgs", "spotify", "logo", "large.png"))
+        self.image = Image.open(os.path.join("imgs", "spotify", "logo_large_white.png"))
         self.image = self.image.convert('RGB')
         smallest = min(self.width, self.height)
         size = float(smallest / 5.0)
