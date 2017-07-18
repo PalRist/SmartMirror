@@ -17,7 +17,7 @@ from contextlib import contextmanager
 
 LOCALE_LOCK = threading.Lock()
 
-ui_locale = 'no_no' # e.g. 'fr_FR' fro French, '' as default
+ui_locale = 'nb_NO.UTF-8' # e.g. 'fr_FR' fro French, '' as default
 time_format = 24 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
 news_country_code = 'no_no'
@@ -36,6 +36,8 @@ TempThreshold = 1
 
 @contextmanager
 def setlocale(name): #thread proof function to work with locale
+    print name
+    print locale.LC_ALL
     with LOCALE_LOCK:
         saved = locale.setlocale(locale.LC_ALL)
         try:
@@ -69,7 +71,7 @@ class TravelMap(Frame):
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = Label(image=self.photo, borderwidth=0, state='normal')
         self.label.image = self.photo 
-        self.label.pack(side=RIGHT, anchor=E, padx=100)
+        self.label.pack(side=LEFT, anchor=E, padx=100)
         self.doUpdate()
 
     def doUpdate(self):
@@ -357,14 +359,58 @@ class CalendarEvent(Frame):
         self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', small_text_size), fg="white", bg="black")
         self.eventNameLbl.pack(side=TOP, anchor=E)
 
+class SpotifyToggle(Frame):
+    def __init__(self, parent, *args, **kwargs):
+        Frame.__init__(self, parent, bg='black')
+        self.parent = parent
+        self.label = None
+        self.doUpdate()
+
+    def resize_image(self):
+        '''
+        resizing image accordfing to width / height
+        Keeping the aspect ratio and just using the shortest of width / height to adjust the image
+        :return:
+        '''
+
+        if self.label is not None:
+            self.label.pack_forget()
+        print self.width, self.height
+        self.image = Image.open('imgs/spotify/logo_large.png')
+        self.image = self.image.convert('RGB')
+        smallest = min(self.width, self.height)
+        size = float(smallest / 5.0)
+        self.image = self.image.resize((smallest, smallest), Image.BICUBIC) #125, 216
+        self.photo = ImageTk.PhotoImage(self.image)
+        self.arc = Canvas(self.parent, width=200, height=200).create_arc(0,smallest,smallest,0, fill="blue", outline="#DDD", width=4)
+
+
+        self.label = Label(image=self.photo, borderwidth=0, state='normal')
+
+
+        self.label.image = self.photo
+
+        self.label.pack(side=RIGHT, anchor=E, padx=100)
+
+
+    def doUpdate(self):
+        self.after(1000, self.doUpdate)
+        self.width, self.height = self.parent.winfo_width(), self.parent.winfo_height()
+        self.resize_image()
+
+
+
+
 
 class FullscreenWindow:
 
     def __init__(self):
         self.tk = Tk()
+
         self.tk.configure(background='black')
         self.topFrame = Frame(self.tk, background = 'black')
         self.bottomFrame = Frame(self.tk, background = 'black')
+
         self.topFrame.pack(side = TOP, fill=BOTH, expand = YES)
         self.bottomFrame.pack(side = BOTTOM, fill=BOTH, expand = YES)
         self.state = False
@@ -376,6 +422,7 @@ class FullscreenWindow:
         # weather
         self.weather = Weather(self.topFrame)
         self.weather.pack(side=LEFT, anchor=N, padx=100, pady=60)
+
         # news
         # self.news = News(self.bottomFrame)
         # self.news.pack(side=LEFT, anchor=S, padx=100, pady=60)
@@ -383,8 +430,14 @@ class FullscreenWindow:
         # self.calender = Calendar(self.bottomFrame)
         # self.calender.pack(side = RIGHT, anchor=S, padx=100, pady=60)
         # travel map
+        self.screen_width =  self.tk.winfo_width()
+        self.screen_height = self.tk.winfo_height()
         self.map = TravelMap(self.bottomFrame)
+        self.map.pack(side = LEFT, anchor=S, padx=100, pady=60)
+        self.spotify = SpotifyToggle(self.bottomFrame)
         self.map.pack(side = RIGHT, anchor=S, padx=100, pady=60)
+
+
 
     def toggle_fullscreen(self, event=None):
         self.state = not self.state  # Just toggling the boolean
