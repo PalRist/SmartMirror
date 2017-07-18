@@ -10,6 +10,7 @@ import json
 import traceback
 import feedparser
 import datetime as dt
+import os
 
 from PIL import Image, ImageTk
 from contextlib import contextmanager
@@ -49,25 +50,25 @@ def setlocale(name): #thread proof function to work with locale
 # maps open weather icons to
 # icon reading is not impacted by the 'lang' parameter
 icon_lookup = {
-    'clear-day': "imgs/weather_icons/Sun.png",  # clear sky day
-    'wind': "imgs/weather_icons/Wind.png",   #wind
-    'cloudy': "imgs/weather_icons/Cloud.png",  # cloudy day
-    'partly-cloudy-day': "imgs/weather_icons/PartlySunny.png",  # partly cloudy day
-    'rain': "imgs/weather_icons/Rain.png",  # rain day
-    'snow': "imgs/weather_icons/Snow.png",  # snow day
-    'snow-thin': "imgs/weather_icons/Snow.png",  # sleet day
-    'fog': "imgs/weather_icons/Haze.png",  # fog day
-    'clear-night': "imgs/weather_icons/Moon.png",  # clear sky night
-    'partly-cloudy-night': "imgs/weather_icons/PartlyMoon.png",  # scattered clouds night
-    'thunderstorm': "imgs/weather_icons/Storm.png",  # thunderstorm
-    'tornado': "imgs/weather_icons/Tornado.png",    # tornado
-    'hail': "imgs/weather_icons/Hail.png"  # hail
+    'clear-day': os.path.join("imgs", "weather_icons", "Sun.png"),  # clear sky day
+    'wind': os.path.join("imgs", "weather_icons", "Wind.png"),   #wind
+    'cloudy': os.path.join("imgs", "weather_icons", "Cloud.png"),  # cloudy day
+    'partly-cloudy-day': os.path.join("imgs", "weather_icons", "PartlySunny.png"),  # partly cloudy day
+    'rain': os.path.join("imgs", "weather_icons", "Rain.png"),  # rain day
+    'snow': os.path.join("imgs", "weather_icons", "Snow.png"),  # snow day
+    'snow-thin': os.path.join("imgs", "weather_icons", "Snow.png"),  # sleet day
+    'fog': os.path.join("imgs", "weather_icons", "Haze.png"),  # fog day
+    'clear-night': os.path.join("imgs", "weather_icons", "Moon.png"),  # clear sky night
+    'partly-cloudy-night': os.path.join("imgs", "weather_icons", "PartlyMoon.png"),  # scattered clouds night
+    'thunderstorm': os.path.join("imgs", "weather_icons", "Storm.png"),  # thunderstorm
+    'tornado': os.path.join("imgs", "weather_icons", "Tornado.png"),    # tornado
+    'hail': os.path.join("imgs", "weather_icons", "Hail.png")  # hail
 }
 
 class TravelMap(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, bg='black')
-        self.image = Image.open('assets/ActiveRoad.png')
+        self.image = Image.open(os.path.join("assets", "ActiveRoad.png"))
         self.image = self.image.convert('RGB')
         self.photo = ImageTk.PhotoImage(self.image)
         self.label = Label(image=self.photo, borderwidth=0, state='normal')
@@ -105,29 +106,29 @@ class TravelMap(Frame):
         # print('Minstetemperatur i Forde %s i dag klokken %s.' % (MinTempForde[0], MinTempForde[1]))
 
     def makeRoad(self, MinTempForde, MinTempSande, MinTempVadheim, MinTempHoyanger):
-        self.tempImg = Image.open('assets/road_trans.png')
+        self.tempImg = Image.open(os.path.join("assets", "road_trans.png"))
         
         # print(MinTempForde)
 
         if MinTempForde <= TempThreshold:
-            self.imgForde = Image.open('assets/forde.png')
+            self.imgForde = Image.open(os.path.join(("assets", "forde.png")))
             self.tempImg.paste(self.imgForde, (0, 0), self.imgForde)
             # self.tempImg.save('assets/ActiveRoad2.png')
 
         if MinTempSande <= TempThreshold:
-            self.imgSande = Image.open('assets/sande.png')
+            self.imgSande = Image.open(os.path.join("assets", "sande.png"))
             self.tempImg.paste(self.imgSande, (0, 0), self.imgSande)
 
         if MinTempVadheim <= TempThreshold:
-            self.imgVadheim = Image.open('assets/vadheim.png')
+            self.imgVadheim = Image.open(os.path.join("assets", "vadheim.png"))
             self.tempImg.paste(self.imgVadheim, (0, 0), self.imgVadheim)
 
         if MinTempHoyanger <= TempThreshold:
-            self.imgHoyanger = Image.open('assets/hoyanger.png')
+            self.imgHoyanger = Image.open(os.path.join("assets", "hoyanger.png'"))
             self.tempImg.paste(self.imgHoyanger, (0, 0), self.imgHoyanger)
 
         self.tempImg = self.tempImg.resize((140, 231), Image.BICUBIC) #125, 216
-        self.tempImg.save('assets/ActiveRoad.png')
+        self.tempImg.save(os.path.join("assets", "ActiveRoad.png"))
 
 class Clock(Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -316,7 +317,7 @@ class NewsHeadline(Frame):
     def __init__(self, parent, event_name=""):
         Frame.__init__(self, parent, bg='black')
 
-        image = Image.open("assets/Newspaper.png")
+        image = Image.open(os.path.join("assets", "Newspaper.png"))
         image = image.resize((25, 25), Image.ANTIALIAS)
         image = image.convert('RGB')
         photo = ImageTk.PhotoImage(image)
@@ -377,7 +378,7 @@ class SpotifyToggle(Frame):
         if self.label is not None:
             self.label.pack_forget()
         print self.width, self.height
-        self.image = Image.open('imgs/spotify/logo_large.png')
+        self.image = Image.open(os.path.join("imgs", "spotify", "logo", "large.png"))
         self.image = self.image.convert('RGB')
         smallest = min(self.width, self.height)
         size = float(smallest / 5.0)
