@@ -3,11 +3,11 @@ import requests
 import json
 import polyline
 from pprint import pprint
-Origin = "Hoyanger,NO"
-Destination = "Forde,NO"
+Origin = "Storgata,Hoyanger,NO"
+Destination = "Brendeholten,Forde,NO"
 GOOGLE_ROUTING_URL = "https://maps.googleapis.com/maps/api/directions/json?origin={}&destination={}"
 
-def GetPolyline(Origin, Destination):
+def getCoordinates(Origin, Destination):
     url = "https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s".format(Origin, Destination)
     r = requests.get(url, verify=False)
     travelRoute_json = json.loads(r.text)
@@ -15,7 +15,9 @@ def GetPolyline(Origin, Destination):
     polyline_coord = polyline.decode(polyline_json)
     coordinates = np.array(polyline_coord)
 
-   # print(coordinates[1])
+    # lan_max, lan_max = coordinates.max(axis=0)
+    # lon_max, lon_min = coordinates.min(axis=0)
+    return coordinates
 
 def getDirections(origin, destination):
     '''
@@ -41,7 +43,7 @@ def getDirections(origin, destination):
 
 
 
-GetPolyline(Origin, Destination)
+getCoordinates(Origin, Destination)
 json_response = getDirections(Origin, Destination)
 
 for direction in json_response:
