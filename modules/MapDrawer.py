@@ -3,7 +3,7 @@ import requests
 import json
 import polyline
 from pprint import pprint
-from sklearn import preprocessing as prep
+from sklearn import preprocessing 
 
 Origin = "Hoyanger,NOR"
 Destination = "Brendeholten,Forde,NOR"
@@ -22,9 +22,8 @@ def getCoordinates(Origin, Destination):
     # lon_max, lon_min = coordinates.min(axis=0)
     return coordinates
 
-def normaliseNumpyArray(Array):
-    # array_norm = (Array - Array.min(0)) / Array.ptp(0)
-    array_norm = prep.MinMaxScaler().fit_transform(Array)
+def normaliseArray(Array):
+    array_norm = preprocessing.MinMaxScaler().fit_transform(Array)
     return array_norm
 
 def getDirections(origin, destination):
@@ -52,7 +51,7 @@ def getDirections(origin, destination):
 
 
 a = getCoordinates(Origin, Destination)
-print(normaliseNumpyArray(normaliseNumpyArray(a)))
+print(normaliseArray(a))
 json_response = getDirections(Origin, Destination)
 
 for direction in json_response:
