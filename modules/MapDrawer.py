@@ -52,6 +52,8 @@ def getDirections(origin, destination):
 
 a = getCoordinates(Origin, Destination)
 print(normaliseArray(a))
+
+
 json_response = getDirections(Origin, Destination)
 
 for direction in json_response:
@@ -87,9 +89,8 @@ for leg in response['legs']:
     for maneuver in leg['maneuvers']:
         # pprint(maneuver['startPoint'])
         total_distance += maneuver['distance']
-print("total time: ", str(response['formattedTime']))
-print("total distance: ", str(total_distance)+ " km")
-
+print("total time: {}".format(str(response['formattedTime'])))
+print("total distance: {}".format(str(total_distance)+ " km"))
 
 
 #for point in responses:
