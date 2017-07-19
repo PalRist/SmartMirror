@@ -20,7 +20,7 @@ from contextlib import contextmanager
 LOCALE_LOCK = threading.Lock()
 
 ui_locale_linux = 'nb_NO.UTF8'
-ui_locale_macOS = 'nb_NO'
+ui_locale_macOS = 'no_NO'
 if (platform.system()).lower() == 'darwin': # Check to see if MAC OS - Darwin
     ui_locale = ui_locale_macOS
 else:
