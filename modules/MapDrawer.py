@@ -2,29 +2,64 @@ import numpy as np
 import requests
 import json
 import polyline
+import matplotlib.pyplot as plt
 from pprint import pprint
 from sklearn import preprocessing 
 
-Origin = "Hoyanger,NOR"
-Destination = "Brendeholten,Forde,NOR"
+# Origin = "Hoyanger,NOR"
+# Destination = "Brendeholten,Forde,NOR"
+Origin = "Tromso,NOR"
+Destination = "Oksfjord,NOR"
+
 GOOGLE_ROUTING_URL = "https://maps.googleapis.com/maps/api/directions/json?origin={}&destination={}"
 
 
 def getCoordinates(Origin, Destination):
     url = "https://maps.googleapis.com/maps/api/directions/json?origin={}&destination={}".format(Origin, Destination)
-    r = requests.get(url)
+    r = requests.get(url, verify=False)
     travelRoute_json = json.loads(r.text)
     polyline_json = travelRoute_json['routes'][0]['overview_polyline']['points']
     polyline_coord = polyline.decode(polyline_json)
     coordinates = np.array(polyline_coord)
 
-    # lan_max, lan_max = coordinates.max(axis=0)
-    # lon_max, lon_min = coordinates.min(axis=0)
-    return coordinates
+    lan_max, lon_max = coordinates.max(axis=0)
+    lan_min, lon_min = coordinates.min(axis=0)
+
+    delta_lan = lan_max - lan_min
+    delta_lon = lon_max - lon_min
+
+    plotfactor_y = delta_lon / lon_max
+    plotfactor_x = delta_lan / lan_max
+    return coordinates, plotfactor_y, plotfactor_x
 
 def normaliseArray(Array):
     array_norm = preprocessing.MinMaxScaler().fit_transform(Array)
     return array_norm
+
+
+TheMap, plotfactor_y, plotfactor_x = ( getCoordinates(Origin,Destination) )
+
+
+AxisScale = 160
+
+
+
+axisFactor_x = AxisScale * plotfactor_x
+axisFactor_y = AxisScale * plotfactor_y
+
+print("axisFactor_y = {}".format(axisFactor_y))
+print("axisFactor_x = {}".format(axisFactor_x))
+print("plotfactor = {}".format(plotfactor_y))
+print("plotfactor = {}".format(plotfactor_x))
+
+
+TheMap = normaliseArray(TheMap)
+x = TheMap[:,1]
+y = TheMap[:,0]
+
+plt.figure(figsize=( axisFactor_x,  axisFactor_y))
+plt.plot(x,y)
+plt.show()
 
 def getDirections(origin, destination):
     '''
@@ -49,9 +84,6 @@ def getDirections(origin, destination):
 
 
 
-
-a = getCoordinates(Origin, Destination)
-print(normaliseArray(a))
 
 
 json_response = getDirections(Origin, Destination)
