@@ -43,16 +43,38 @@ def convSpherCoordTo2D(Array):
 
 def mapColorArray(lonArr, latArr, ChunkNo):
 
-    if len(lonArr) <> len(latArr):
+    if len(lonArr) != len(latArr):
+        print("Arrays have different length.You have done something wrong, bitch please")
         return None
     else:
+        NoEntries = len(lonArr)
+        CoorDistance = NoEntries / ChunkNo
+
+        for ent in range(NoEntries):
+            if ent % CoorDistance == 0:
+                # print(myCoordinates[ent,1])
+                # print(myCoordinates[ent,0])
+                localweather = minWeatherAtLocation(myCoordinates[ent,1], myCoordinates[ent,0])
+                print(myCoordinates[ent], localweather)
+
+        # print(CoorDistance)
+        # for ent in NoEntries:
+
+            # if .................................................
+            # if .................................................
+            # if .................................................
+            # if .................................................
+            # if .................................................
 
 
+
+        ColorArray = 1
         return ColorArray
 
-TheMap = getCoordinates(ORIGIN,DESTINATION)
-lon, lat = convSpherCoordTo2D(TheMap)
+myCoordinates = getCoordinates(ORIGIN,DESTINATION)
 
+lon, lat = convSpherCoordTo2D(myCoordinates)
+a = mapColorArray(myCoordinates[:,1], myCoordinates[:,0],5)
 
 plt.gca().set_aspect('equal', adjustable='box')
 plt.plot(lon,lat)
