@@ -5,6 +5,7 @@ import polyline
 import matplotlib.pyplot as plt
 from pprint import pprint
 from sklearn import preprocessing 
+from tools.WeatherFunctions import minWeatherAtLocation
 
 ORIGIN = "Hoyanger,NOR"
 DESTINATION = "Brendeholten,Forde,NOR"
@@ -16,7 +17,7 @@ GOOGLE_ROUTING_URL = "https://maps.googleapis.com/maps/api/directions/json?origi
 def getCoordinates(Origin, Destination):
     try:
         url = GOOGLE_ROUTING_URL.format(Origin, Destination)
-        r = requests.get(url, verify=False)
+        r = requests.get(url)
         travelRoute_json = json.loads(r.text)
         polyline_json = travelRoute_json['routes'][0]['overview_polyline']['points']
         polyline_coord = polyline.decode(polyline_json)
@@ -38,13 +39,15 @@ def convSpherCoordTo2D(Array):
 
     lon = [((MAP_WIDTH/360) * (180 + lon)) for lon in Array[:,1]]
     lan = [((MAP_HEIGHT/180) * (90 + lan)) for lan in Array[:,0]]
-    return lon, lan
+    return zip(lon, lan)
 
 def mapChucksplitter(CoorArray, ChunkNo):
+
     return None
 
 TheMap = getCoordinates(ORIGIN,DESTINATION)
-lon, lan = convSpherCoordTo2D(TheMap)
+lon = convSpherCoordTo2D(TheMap)[:,1]
+lan = convSpherCoordTo2D(TheMap)[:,0]
 
 plt.gca().set_aspect('equal', adjustable='box')
 plt.plot(lon,lan)
