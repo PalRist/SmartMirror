@@ -15,6 +15,9 @@ GOOGLE_ROUTING_URL = "https://maps.googleapis.com/maps/api/directions/json?origi
 
 
 def getCoordinates(Origin, Destination):
+    '''
+    Queries google for map coordinates between two locations.
+    '''
     try:
         url = GOOGLE_ROUTING_URL.format(Origin, Destination)
         r = requests.get(url)
@@ -32,8 +35,9 @@ def normaliseArray(Array):
     return array_norm
 
 def convSpherCoordTo2D(Array):
-    # Opplosning for konvertering fra sfaeriske koordinater
-    # til 2D for plotting av riktig aspektratio.
+    '''
+    Converts map/spherical coordinates to 2D coordinates
+    '''
     MAP_WIDTH = 1024
     MAP_HEIGHT = 1024
 
@@ -41,26 +45,37 @@ def convSpherCoordTo2D(Array):
     lat = [((MAP_HEIGHT/180) * (90 + lat)) for lat in Array[:,0]]
     return lon, lat
 
-def plotLatLonColor(myCoord, ChunkNo):
+def colorCodeTemperature(Temp):
+    '''
+    Returns a RGBA color value from 0..1 
+    '''
     MAXTEMP = 30
     MINTEMP = 24
+
+    if Temp >= MAXTEMP:
+        colorValue = 1
+    elif Temp <= MINTEMP:
+        colorValue = 0
+    else:
+        colorValue = (MAXTEMP - Temp) / (MAXTEMP - MINTEMP)
+    return colorValue    
+
+def plotLatLonColor(myCoord, ChunkNo):
+    '''
+    Splits the coordinates into chucks and returns 
+    variables ready for ploting with ie. matplotlib
+    '''
     lon, lat = convSpherCoordTo2D(myCoord)
     NoEntries = len(lon)
     CoorDistance = NoEntries / ChunkNo
-    LastChunk = 0
     ColorArray =[]
 
     for ent in range(NoEntries):
         if ent % CoorDistance == 0:
             # print(myCoordinates[ent,1])
             # print(myCoordinates[ent,0])
-            localweather = minWeatherAtLocation(myCoord[ent,1], myCoord[ent,0])
-            if localweather >= MAXTEMP:
-                RGBvalue = 1
-            elif localweather <= MINTEMP:
-                RGBvalue = 0
-            else:
-                RGBvalue = (MAXTEMP - localweather) / (MAXTEMP - MINTEMP)
+            coordTemp = minWeatherAtLocation(myCoord[ent,1], myCoord[ent,0])
+            RGBvalue = colorCodeTemperature(coordTemp)
             # print(myCoordinates[ent], RGBvalue)
 
         ColorArray.append(RGBvalue)
