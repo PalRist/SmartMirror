@@ -18,16 +18,13 @@ def minWeatherAtLocation(latitude, longitude):
     r = requests.get( weather_req_url )
     weather_obj = json.loads(r.text)
     ThisHour = dt.datetime.now().hour
-    # degree_sign = u'\N{DEGREE SIGN}'
-    ColdestTemp = 50
-    ColdestHour = 25
+    ColdestTemp = 100
+    # ColdestHour = 25
 
     for hour in range(24):
         if hour <= ThisHour:
             temperature = float(weather_obj['hourly']['data'][hour]['temperature'])
             if temperature <= ColdestTemp:
                 ColdestTemp = temperature
-                ColdestHour = hour
-
-    # temperatureMin = "%s%s" % (str(ColdestTemp), degree_sign)
+                # ColdestHour = hour
     return ColdestTemp#, ColdestHour
