@@ -5,7 +5,7 @@ import polyline
 import matplotlib.pyplot as plt
 from pprint import pprint
 from sklearn import preprocessing 
-from tools.WeatherFunctions import minWeatherAtLocation
+from tools.WeatherFunctions import *
 
 ORIGIN = "Hoyanger,NOR"
 DESTINATION = "Brendeholten,Forde,NOR"
@@ -38,19 +38,24 @@ def convSpherCoordTo2D(Array):
     MAP_HEIGHT = 1024
 
     lon = [((MAP_WIDTH/360) * (180 + lon)) for lon in Array[:,1]]
-    lan = [((MAP_HEIGHT/180) * (90 + lan)) for lan in Array[:,0]]
-    return zip(lon, lan)
+    lat = [((MAP_HEIGHT/180) * (90 + lat)) for lat in Array[:,0]]
+    return lon, lat
 
-def mapChucksplitter(CoorArray, ChunkNo):
+def mapColorArray(lonArr, latArr, ChunkNo):
 
-    return None
+    if len(lonArr) <> len(latArr):
+        return None
+    else:
+
+
+        return ColorArray
 
 TheMap = getCoordinates(ORIGIN,DESTINATION)
-lon = convSpherCoordTo2D(TheMap)[:,1]
-lan = convSpherCoordTo2D(TheMap)[:,0]
+lon, lat = convSpherCoordTo2D(TheMap)
+
 
 plt.gca().set_aspect('equal', adjustable='box')
-plt.plot(lon,lan)
+plt.plot(lon,lat)
 plt.show()
 
 

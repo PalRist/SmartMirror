@@ -69,6 +69,7 @@ icon_lookup = {
     'tornado': os.path.join("imgs", "weather_icons", "Tornado.png"),    # tornado
     'hail': os.path.join("imgs", "weather_icons", "Hail.png")  # hail
 }
+
 class Clock(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, bg='black')
