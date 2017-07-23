@@ -6,61 +6,46 @@ import matplotlib.pyplot as plt
 from pprint import pprint
 from sklearn import preprocessing 
 
-# Origin = "Hoyanger,NOR"
-# Destination = "Brendeholten,Forde,NOR"
-Origin = "Tromso,NOR"
-Destination = "Oksfjord,NOR"
-
+ORIGIN = "Hoyanger,NOR"
+DESTINATION = "Brendeholten,Forde,NOR"
+# ORIGIN = "Tromso,NOR"
+# DESTINATION = "Oksfjord,NOR"
 GOOGLE_ROUTING_URL = "https://maps.googleapis.com/maps/api/directions/json?origin={}&destination={}"
 
 
 def getCoordinates(Origin, Destination):
-    url = "https://maps.googleapis.com/maps/api/directions/json?origin={}&destination={}".format(Origin, Destination)
+    url = GOOGLE_ROUTING_URL.format(Origin, Destination)
     r = requests.get(url, verify=False)
     travelRoute_json = json.loads(r.text)
     polyline_json = travelRoute_json['routes'][0]['overview_polyline']['points']
     polyline_coord = polyline.decode(polyline_json)
     coordinates = np.array(polyline_coord)
-
-    lan_max, lon_max = coordinates.max(axis=0)
-    lan_min, lon_min = coordinates.min(axis=0)
-
-    delta_lan = lan_max - lan_min
-    delta_lon = lon_max - lon_min
-
-    plotfactor_y = delta_lon / lon_max
-    plotfactor_x = delta_lan / lan_max
-    return coordinates, plotfactor_y, plotfactor_x
+    return coordinates
 
 def normaliseArray(Array):
     array_norm = preprocessing.MinMaxScaler().fit_transform(Array)
     return array_norm
 
+def convSpherCoordTo2D(Array):
+    '''
+    Oppløsning for konvertering fra sfæriske koordinater
+    til 2D for plotting av riktig aspektratio.
+    '''
+    MAP_WIDTH = 1024
+    MAP_HEIGHT = 1024
+    
+    newX = [((MAP_WIDTH/360) * (180 + lon)) for lon in Array[:,1]]
+    newY = [((MAP_HEIGHT/180) * (90 + lan)) for lan in Array[:,0]]
+    return newX, newY
 
-TheMap, plotfactor_y, plotfactor_x = ( getCoordinates(Origin,Destination) )
+TheMap = getCoordinates(ORIGIN,DESTINATION)
+lon, lan = convSpherCoordTo2D(TheMap)
 
-
-AxisScale = 160
-
-
-
-axisFactor_x = AxisScale * plotfactor_x
-axisFactor_y = AxisScale * plotfactor_y
-
-print("axisFactor_y = {}".format(axisFactor_y))
-print("axisFactor_x = {}".format(axisFactor_x))
-print("plotfactor = {}".format(plotfactor_y))
-print("plotfactor = {}".format(plotfactor_x))
-
-
-TheMap = normaliseArray(TheMap)
-x = TheMap[:,1]
-y = TheMap[:,0]
-
-plt.figure(figsize=( axisFactor_x,  axisFactor_y))
-plt.plot(x,y)
+plt.gca().set_aspect('equal', adjustable='box')
+plt.plot(lon,lan)
 plt.show()
 
+# Trengs denne funksjonen?
 def getDirections(origin, destination):
     '''
     :param origin: Start destination
@@ -81,17 +66,6 @@ def getDirections(origin, destination):
         return None
 
 
-
-
-
-
-
-json_response = getDirections(Origin, Destination)
-
-for direction in json_response:
-    points = direction['overview_polyline']['points']
-    polyline_coord = polyline.decode(points)
-    # print polyline_coord
 
 
 '''
