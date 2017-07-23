@@ -38,7 +38,7 @@ def convSpherCoordTo2D(Array):
 
     lon = [((MAP_WIDTH/360) * (180 + lon)) for lon in Array[:,1]]
     lan = [((MAP_HEIGHT/180) * (90 + lan)) for lan in Array[:,0]]
-    return newX, newY
+    return lon, lan
 
 def mapChucksplitter(CoorArray, ChunkNo):
     return None
