@@ -49,8 +49,8 @@ def colorCodeTemperature(Temp):
     '''
     Returns a RGBA color value from 0..1 
     '''
-    MAXTEMP = 30
-    MINTEMP = 24
+    MAXTEMP = 10
+    MINTEMP = 1
 
     if Temp >= MAXTEMP:
         colorValue = 1
@@ -67,7 +67,7 @@ def plotLatLonColor(myCoord, ChunkNo):
     '''
     lon, lat = convSpherCoordTo2D(myCoord)
     NoEntries = len(lon)
-    CoorDistance = NoEntries / ChunkNo
+    CoorDistance = int(NoEntries / ChunkNo)
     ColorArray =[]
 
     for ent in range(NoEntries):
