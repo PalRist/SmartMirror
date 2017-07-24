@@ -83,6 +83,7 @@ def plotLatLonColor(myCoord, ChunkNo):
     
     return lon, lat, ColorArray
 
+# dette er en test. redigerer fra nettbrett
 
 
 myCoordinates = getCoordinates(ORIGIN,DESTINATION)
@@ -151,4 +152,3 @@ def getDirections(origin, destination):
 
 
 # #for point in responses:
-
