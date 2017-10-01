@@ -211,3 +211,6 @@ $RECYCLE.BIN/
 
 # Sublime-github package stores a github token in this file
 # https://packagecontrol.io/packages/sublime-github
+
+## NODE MODULES
+authorization_code/node_modules/*
