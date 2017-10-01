@@ -41,6 +41,13 @@ function () {
             return false;
         }.bind(this);
 
+        this.makeWidget = function (content,identifier, posX, posY, width, height, autoplacement) {
+            var el = this.grid.addWidget(content, posX, posY, width, height, autoplacement);
+            el.attr("id",identifier)
+            return el
+
+        }
+
         $('#add-new-widget').click(this.addNewWidget);
     };
 });
