@@ -1,0 +1,9 @@
+.grid-stack {
+        background: lightgoldenrodyellow;
+    }
+
+.grid-stack-item-content {
+    color: #fc3;
+    text-align: center;
+    background-color: #00f;
+}
