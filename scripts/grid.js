@@ -32,7 +32,7 @@ function () {
             // this.grid.addWidget($('<div><div class="grid-stack-item-content" /><div/>'),
                 // node.x, node.y, node.width, node.height);
 
-            this.grid.add_widget($( '<div class="grid-stack-item"><div class="grid-stack-item-content">' + node.content + '</div></div>' ), node.x, node.y, node.width, node.height );
+            this.grid.add_widget($( '<div class="grid-stack-item"><div id="first" class="grid-stack-item-content">' + node.content + '</div></div>' ), node.x, node.y, node.width, node.height );
 
             return false;
         }.bind(this);
@@ -40,3 +40,4 @@ function () {
         $('#add-new-widget').click(this.addNewWidget);
     };
 });
+
