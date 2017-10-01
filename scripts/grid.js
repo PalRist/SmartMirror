@@ -24,20 +24,20 @@ function () {
 
         this.addNewWidget = function () {
             var node = this.items.pop() || {
-                        x: 12 * Math.random(),
-                        y: 5 * Math.random(),
+                        x: 1,
+                        y: 1,
                         width: 1 + 3 * Math.random(),
                         height: 1 + 3 * Math.random()
                     };
             // this.grid.addWidget($('<div><div class="grid-stack-item-content" /><div/>'),
                 // node.x, node.y, node.width, node.height);
 
-            var el = this.grid.add_widget($( '<div class="grid-stack-item"><div class="grid-stack-item-content">' + node.content + '</div></div>' ), node.x, node.y, node.width, node.height );
+            var el = this.grid.addWidget($( '<div class="grid-stack-item"><div class="grid-stack-item-content">' + node.content + '</div></div>' ), node.x, node.y, node.width, node.height, true);
 
             var my_id = 'abc'
             el.attr('data-custom-id', my_id);
             alert(el.attr('data-custom-id'))
-            
+
             return false;
         }.bind(this);
 
