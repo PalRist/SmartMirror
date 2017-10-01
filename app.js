@@ -24,7 +24,20 @@ app.use('/', express.static(__dirname + '/css'));
 
 app.get("/", function(req, res){
   res.sendfile("index")
-})
+});
 
+app.get("/modules", function (req, res) {
+    res.send({
+            modules: [
+                {clock: [{options:{minwidth:100, minheight:100}}
+
+                ]},
+                        {spotify: [{options:{minwidth:100, minheight:100}}
+
+                ]}
+            ]
+});
+
+});
 console.log('Listening on 8888');
 app.listen(8888);
