@@ -15,7 +15,9 @@ var cookieParser = require('cookie-parser');
 var client_id = 'a3dc7add85b7450eb59b7507049517fd'; // Your client id
 var client_secret = 'fdc098985dc24a03a3a67870ca5240f5'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var app = express();
 
+/*
 const Spotify = require('spotify-web-api-node');
 var spotifyApi = new Spotify({
         clientId : client_id,
@@ -26,6 +28,7 @@ var spotifyApi = new Spotify({
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
+/*
 var generateRandomString = function(length) {
   var text = '';
   var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -146,7 +149,6 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-
 app.get("/test", function (req, res) {
   let access_token = req.query.code;
     spotifyApi.setAccessToken(access_token);
@@ -157,6 +159,18 @@ app.get("/test", function (req, res) {
                 res.send(error);
             });
 
+})
+*/
+
+
+app.use("/", express.static(__dirname));
+app.use('/', express.static(__dirname + '/view'));
+app.use('/', express.static(__dirname + '/scripts'));
+app.use('/', express.static(__dirname + '/css'));
+
+
+app.get("/home", function(req, res){
+  res.sendfile("index")
 })
 
 console.log('Listening on 8888');
