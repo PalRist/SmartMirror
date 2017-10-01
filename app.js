@@ -27,12 +27,18 @@ app.get("/", function(req, res){
 });
 
 app.get("/modules", function (req, res) {
+
     res.send({
             modules: [
-                {clock: [{options:{minwidth:100, minheight:100}}
+                {clock: [
+                    {content: "<div> klokke </div>"},
+                    {options:{minwidth:100, minheight:100}}
 
                 ]},
-                        {spotify: [{options:{minwidth:100, minheight:100}}
+
+                {spotify: [
+                    {content: "<div> spotify </div>"},
+                    {options:{minwidth:100, minheight:100}}
 
                 ]}
             ]
