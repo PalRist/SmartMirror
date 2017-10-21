@@ -41,8 +41,6 @@ $(
                 return false;
 
             }
-
-
             let elm = "<img src='http://www.readersdigest.ca/wp-content/uploads/2011/01/4-ways-cheer-up-depressed-cat.jpg' </img>" ;
             //$('#add-new-widget').click(this.addNewWidget);
             $('#add-new-widget').click({element: elm},createWidget);
